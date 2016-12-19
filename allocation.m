@@ -1,9 +1,8 @@
 function alloc=allocation(ber, gains, bruits, ptot)
     
-    alloc 	= zeros((256, 1));	% Vecteur contenant le type de modulation qu'il faudra appliquer pour chaque sous-canal
-    alphas 	= zeros((256, 2));	% Vecteur des rapports bruit à canal
-    R		= ones((256, 2));	% Vecteur des pourcentages de la puissance totale
-    SNR		= zeros((256, 2));	% Vecteur des SNR de chaque sous-canal
+    alloc 	= zeros([256, 1]);	% Vecteur contenant le type de modulation qu'il faudra appliquer pour chaque sous-canal
+    alphas 	= zeros([256, 2]);	% Vecteur des rapports bruit à canal
+    R		= ones([256, 2]);	% Vecteur des pourcentages de la puissance totale
     
     %--- Construction de alphas ---
     for i = 0:256
@@ -11,32 +10,32 @@ function alloc=allocation(ber, gains, bruits, ptot)
     end
 
     % On trie alphas pour obtenir A et I, le tableau des index qu'on utilisera ensuite pour réordonner les sous-canaux.
-    (A, I) = sort(alphas);
+    A, I = sort(alphas);
 
     %--- Construction de R ---
-    i = 1
+    i = 1;
 	while(i <= N && sum <= 1)
-		R(i) = 1/A(i+1) - A(i)
+		R(i) = 1/A(i+1) - A(i);
 
 		for j = 1:i
-			sum = sum + R(j)
+			sum = sum + R(j);
 		end
-		i = i + 1
+		i = i + 1;
 	end
 
 	if (i <= N)
-		inu = 1
+		inu = 1;
 
-		for j = 1:(i-1) do
-			inu = inu + A(j)
+		for j = 1:(i-1)
+			inu = inu + A(j);
 		end
 
-		for j = 1:(i-1) do
-			R(j) = 1/inu - A(j)
+		for j = 1:(i-1)
+			R(j) = 1/inu - A(j);
 		end
 
-		for j = i:N do
-			R(j) = 0	
+		for j = i:N
+			R(j) = 0;
 		end
 	end
 
@@ -45,7 +44,7 @@ function alloc=allocation(ber, gains, bruits, ptot)
 
 	for i = 1:3
 		if (SNR(i) > ber(i))
-			alloc(i) = 2^(i + 1)
+			alloc(i) = 2^(i + 1);
 		end
 	end
 end
