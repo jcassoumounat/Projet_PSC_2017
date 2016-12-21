@@ -1,33 +1,17 @@
-function x = modulationDMT(suite_symboles_in, nombre_canaux, prefixe_cyclique)
-
-% suite_symboles_in suite des symboles complexes à transmettre
-% nombre_canaux nombre de canaux utilisés
-% prefixe_cyclique la longueur du CP
-
-N = nombre_canaux;
-numero_canal = 1;
-symbole_canaux = zeros(5,5);
-j = 1;
-
-% Répartition en différents canaux (chaque ligne = 1 canal)
-
-for i=1:length(suite_symboles_in)
-    if(j == length(suite_symboles_in)/N+1)
-        j = 1;
-        numero_canal = numero_canal + 1;
+function [suite_symboles_out] = modulationDMT(tableau_complexe_N_dim, nb_bits_to_process, nombre_sous_canaux)
+    for i=1:nombre_sous_canaux
+        %% Transformer le tableau à N dimensions en un vecteur %%
+        for j=1:nb_bits_to_process
+            data(j) = tableau_complexe_N_dim(j,i);
+        end
+        data_ifft = ifft(data);
+        
+        %% Ajouter complexe conjugué %%
+        
+        %% Regroupement des signaux modulés dans un tableau global %%
+        for f=1:length(data_ifft)
+            suite_symboles_out(f,i) = data_ifft(f);        
+        end      
     end
-    symbole_canaux(numero_canal,j) = suite_symboles_in(i);
-    j = j+1;
 end
-
-% Mapping QAM
-
-for i=1:length(suite_symboles_in)/N+1
-    
-end
-
-
-
-bar(suite_symboles_in,'w');
-x = symbole_canaux;
 
