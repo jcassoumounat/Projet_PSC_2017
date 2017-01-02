@@ -13,8 +13,9 @@ function [suite_symboles_out] = modulationQAM(tableau_bits_N_dim, nb_bits_to_pro
         
         %% Transformation du tableau de bits en tableau de symboles %%
         nb_bits_symbole = log2(type_QAM_bits_allocation(i)); %nombre de bits par symboles
-        dataInMatrix = reshape(dataIn,length(dataIn)/nb_bits_symbole,nb_bits_symbole);   
+        dataInMatrix = reshape(dataIn,length(dataIn)/nb_bits_symbole,nb_bits_symbole);
         dataSymbolsIn = bi2de(dataInMatrix);  
+        
         
         %% Modulation %%
         suite_symboles = qammod(dataSymbolsIn, type_QAM_bits_allocation(i), 0); 
