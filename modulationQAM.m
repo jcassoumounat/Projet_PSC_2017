@@ -6,7 +6,8 @@ function [suite_symboles_out] = modulationQAM(tableau_bits_N_dim, nb_bits_to_pro
     % - type_QAM_bits_allocation : vecteur colonne contenant le type de QAM (water-filling)
 
     for i=1:nombre_sous_canaux
-        %% Transformer le tableau Ã  N dimensions en un vecteur %%
+        
+        %% Transformer le tableau à N dimensions en un vecteur %%
         for j=1:nb_bits_to_process
             dataIn(j) = tableau_bits_N_dim(j,i);
         end
@@ -23,9 +24,10 @@ function [suite_symboles_out] = modulationQAM(tableau_bits_N_dim, nb_bits_to_pro
         %% Plot des modulations %%
         sPlotFig = scatterplot(suite_symboles,1,0,'g.');
         
-        %% Regroupement des signaux modulÃ©s dans un tableau global %%
+        %% Regroupement des signaux modulés dans un tableau global %%
         for f=1:length(suite_symboles)
             suite_symboles_out(f,i) = suite_symboles(f);        
         end        
+        
     end  
 end

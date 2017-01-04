@@ -5,11 +5,11 @@ function [suite_symboles_out] = demodulationQAM(signal_in, nb_bits_to_process , 
     % - type_QAM_bits_allocation : vecteur colonne contenant le type de QAM (water-filling)
 
     for i=1:nombre_sous_canaux
+        
         %% Transformer le tableau à N dimensions en un vecteur %%
         for j=1:nb_bits_to_process
             dataCanal(j) = signal_in(j,i);
         end
-        dataCanal = transpose(dataCanal);
         
         %% Demodulation %%
         nb_bits_symbole = log2(type_QAM_bits_allocation(i));
@@ -21,5 +21,6 @@ function [suite_symboles_out] = demodulationQAM(signal_in, nb_bits_to_process , 
         for f=1:length(dataOut)
             suite_symboles_out(f,i) = dataOut(f);        
         end        
+        
     end  
 end

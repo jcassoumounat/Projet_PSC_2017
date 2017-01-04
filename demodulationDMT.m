@@ -1,46 +1,36 @@
-function [suite_bits,x]=demodulationDMT(signal_recu,h_eval_mod,nombre_canaux,prefixe_cyclique,tab)
- 
+function [suite_symboles_out] = demodulationDMT(signal_recu,nb_symbs_to_process,nombre_canaux)
+
 % signal_recu = signal reçu après passage dans le canal
 % h_eval_mod = module de la réponse impulsionnelle du canal, identifiée
 % nombre_canaux = nombre de canaux utilisés
 % prefixe_cyclique = longueur du CP
 % tab = vecteur table allocation des bits
- 
- 
-%%%%%%%%%%%%%%%%%%
-% Initialisation %
-%%%%%%%%%%%%%%%%%%
 
-N=nombre_canaux; % Nombre de canaux utilisés
-v=prefixe_cyclique; % Longueur du CP
- 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Suppression du CP               %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
-signal_recu=signal_recu(v+1:2*N+v); 
- 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% FFT et égalisation du signal % 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
-x_fft=fft(signal_recu); 
-x=x_fft(1:N); % suppression des coordonnées conjuguées introduites avant IFFT 
-x=x./h_eval_mod; % égalisation
- 
- 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Reconstruction des symboles et démodulation %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
-symb=[]; % Contiendra les symboles sous forme décimale
-for i=1:N
-    symb(i)=demodulationQAM(real(x(i)),imag(x(i)),2^(tab(i)));
+for i=1:nombre_canaux
+    %% Transformer le tableau à N dimensions en un vecteur %%
+    for j=1:nb_symbs_to_process
+        dataDemod(j) = signal_recu(j,i);
+    end
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%% Suppression du CP         %%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    %signal_recu=signal_recu(v+1:2*N+v);
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % FFT et égalisation du signal %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    signal_before_egalisation = fft(dataDemod);
+    
+    %signal_fft = x./h_eval_mod; % égalisation
+    
+    
+    %% Regroupement des signaux modulés dans un tableau global %%
+    
+    for f=1:length(signal_before_egalisation)
+        suite_symboles_out(f,i) = signal_before_egalisation(f);
+    end
 end
- 
-% suite de bits
-suite_bits=[]; 
-for j=1:N
-    suite_bits=[suite_bits decodage_symboles(symb(j),2^(tab(j)))]; 
 end
-
