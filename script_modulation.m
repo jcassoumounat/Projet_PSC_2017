@@ -2,7 +2,7 @@
 nb_channels = 256;
 dataIn = cell(1,256);
 symboles_out = cell(1,256); 
-symboles_out_ifft = cell(1,256); 
+before_canal = cell(1,256); 
 after_canal = cell(1,256); 
 dataOut = cell(1,256); 
 
@@ -22,7 +22,7 @@ for i = 1:nb_channels
     data = randi([0 1], nb_bits, 1);
     dataIn{i} = data;
     symboles_out{i} = modulationQAM(dataIn{i},bit_alloc,i);
-    symboles_out_ifft{i} = modulationDMT(symboles_out{i});
+    before_canal{i} = modulationDMT(symboles_out{i});
 end
     
 %%%% Transmission into the channel %%%%
@@ -38,6 +38,6 @@ for i = 1:nb_channels
         nb_bits = 72;
     end
     
-    after_canal{i} = demodulationDMT(symboles_out_ifft{i});
+    after_canal{i} = demodulationDMT(before_canal{i});
     dataOut{i} = demodulationQAM(after_canal{i},bit_alloc,i);
 end
