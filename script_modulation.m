@@ -1,17 +1,43 @@
-%% Script Modulation/Demodulation DMT %%
+%% Initialisation of parameters %%
+nb_channels = 256;
+dataIn = cell(1,256);
+symboles_out = cell(1,256); 
+symboles_out_ifft = cell(1,256); 
+after_canal = cell(1,256); 
+dataOut = cell(1,256); 
 
-nb_bits = 960;
-nb_channels = 3;
-mod_util = 4;
-dataIn = randi([0 1],nb_bits,nb_channels);
-
-%%%% Bit Allocation %%%%
+%% Bit Allocation %%
 bit_alloc = bit_allocation();
 
-symboles_out = modulationQAM(dataIn,nb_bits,nb_channels,[mod_util;mod_util;mod_util]);
-symboles_out_ifft = modulationDMT(symboles_out,nb_bits/log2(mod_util),nb_channels);
+%% Transmitter side %%
+for i = 1:nb_channels
+    if bit_alloc(i) == 4
+        nb_bits = 24;
+    elseif bit_alloc(i) == 8
+        nb_bits = 48;
+    elseif bit_alloc(i) == 16
+        nb_bits = 72;
+    end
+    
+    data = randi([0 1], nb_bits, 1);
+    dataIn{i} = data;
+    symboles_out{i} = modulationQAM(dataIn{i},bit_alloc,i);
+    symboles_out_ifft{i} = modulationDMT(symboles_out{i});
+end
+    
+%%%% Transmission into the channel %%%%
 
-%%%% Transmission dans le canal %%%%
+%% Receiver side %%
 
-after_canal = demodulationDMT(symboles_out_ifft,nb_bits/log2(mod_util),nb_channels);
-dataOut = demodulationQAM(after_canal,nb_bits/log2(mod_util),nb_channels,[mod_util;mod_util;mod_util]);
+for i = 1:nb_channels
+    if bit_alloc(i) == 4
+        nb_bits = 24;
+    elseif bit_alloc(i) == 8
+        nb_bits = 48;
+    elseif bit_alloc(i) == 16
+        nb_bits = 72;
+    end
+    
+    after_canal{i} = demodulationDMT(symboles_out_ifft{i});
+    dataOut{i} = demodulationQAM(after_canal{i},bit_alloc,i);
+end

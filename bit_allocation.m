@@ -14,7 +14,7 @@ ber 	= thresholds;
 ptot 	= 10;
 
 alloc = allocation(ber, gains, bruits, ptot);
-alloc'
+alloc';
 
 end
 
