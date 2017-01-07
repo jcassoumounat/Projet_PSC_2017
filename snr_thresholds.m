@@ -1,3 +1,5 @@
+% This script allows the recuperation of the SNRs which grant a bit-error-rate lower than 10^(-7)
+
 i = 1;
 while ((i <= length(berQAM4)) && (berQAM4(i) > 10^(-7)))
     i = i + 1;
@@ -15,5 +17,3 @@ while ((i <= length(berQAM16)) && (berQAM16(i) > 10^(-7)))
     i = i + 1;
 end
 threshold_snrQAM16 = snrQAM16(i)
-
-    
