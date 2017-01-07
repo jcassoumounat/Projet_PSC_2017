@@ -8,7 +8,7 @@ function [superframe_vector, remaining_data] = superframe(data, rate)
 %   rate : rate of the communication, calculated before
 
 data_size = size(data, 2);
-NB_FRAMES_SUPERFRAME = 69; %the 69th frame is the sync frame
+NB_FRAMES_SUPERFRAME = 69; %the 69th frame is the sync frame, added in the modulation
 SUPERFRAME_DURATION = 0.017;
 FRAME_DURATION = SUPERFRAME_DURATION/NB_FRAMES_SUPERFRAME; %seconds
 FEC_SIZE = 8; %bits !!!!!!!!!!!!!!!see in function of the CRC salomon code!!!!!!!!!!!!!!!!!

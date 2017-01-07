@@ -1,11 +1,12 @@
-function [frame_vector] = frame(data_vector, FEC_size)
+function [frame_vector, fast_data_size] = frame(data_vector, FEC_size)
 %Create a frame of the ADSL with fast data buffer and interleaved data
 %buffer
 %   frame_vector : a vector compsed of bits. It is what is modulated and
-%   sent
-%   [...fast_data(reed_salomon) FEC...data_interleaved]
+%   sent           [...fast_data(reed_salomon) FEC...data_interleaved]
+%   fast_data_size : size of fast data
 %
 %   data_vector : data we put in the frame
+%   FEC_size : size of non data bits in a frame
 
 data_size = size(data_vector, 2);
 
@@ -14,11 +15,6 @@ if data_size < FEC_size*2+2
 else
 
     fast_data_size = round(data_size/2) - FEC_size; % /2 -> arbitrary decision
-    interlaved_data_size = data_size - (fast_data_size + FEC_size);
-
-    future_data=[];
-    future_fast_data=[];
-    future_interleaved_data=[];
 
     %future data (fast and interleaved data)
     future_data = reedSolomon_temp(data_vector);
@@ -26,9 +22,7 @@ else
     %fast data
     for i = 1 : fast_data_size
         fast_data(i) = future_data(i);
-        %future_fast_data(i)=data_vector(i);
     end
-    %fast_data = reedSolomon_temp(future_fast_data);
 
     %FEC
     for i = 1 : FEC_size
