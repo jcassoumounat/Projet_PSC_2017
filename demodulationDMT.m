@@ -1,15 +1,17 @@
 function [suite_symboles_out] = demodulationDMT(signal_recu)
 
 % signal_recu = signal reçu après passage dans le canal
-   
-%% Suppression complexe conjugué + préfixe cyclique %%
-%signal_recu=signal_recu(v+1:2*N+v);
- 
-%% FFT %%
-suite_symboles_out = fft(signal_recu);
-    
-%% Egalisation %%
-%signal_fft = x./h_eval_mod; % égalisation
-    
+j = 1;
 
+signal_comp = zeros(length(signal_recu)/2,1);
+
+%% Transformation en signal complexe %%
+for l = 1:2:length(signal_recu)
+    signal_comp(j) = signal_recu(l) +  signal_recu(l+1)*1i;
+    j = j+1; 
+end
+
+%% FFT %%
+suite_symboles_out = fft(signal_comp);
+    
 end
