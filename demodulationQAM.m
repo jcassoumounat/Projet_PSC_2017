@@ -2,7 +2,7 @@ function [dataOut] = demodulationQAM(dataCanal, type_QAM_bits_allocation,i)
 
 % Return the bits for every sub-canal
 
-%% Parameters %
+%% Parameters %%
 % - Inputs :
 %   * dataCanal : symboles received after demodulation DMT
 %   * type_QAM_bits_allocation : vector containing types of QAM by canal
