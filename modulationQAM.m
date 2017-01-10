@@ -13,7 +13,4 @@ dataSymbolsIn = bi2de(dataInMatrix);
 %% Modulation %%
 suite_symboles = qammod(dataSymbolsIn, type_QAM_bits_allocation(i), 0);
 
-%% Plot from modulations %%
-% sPlotFig = scatterplot(suite_symboles,1,0,'g.');
-
 end

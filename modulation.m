@@ -1,28 +1,35 @@
 function [dataIn, data_concat] = modulation(bit_In, bit_alloc)
 
+% bit_In : bits incomming
+% bit_alloc : vector containing types of QAM by canal
+
+%dataIn : bits dispatch in the canals
+%data_concat : data before sending to the canal
+
 global j
 j=1;
 
 %% Initialisation of parameters %%
 nb_channels = 256;
-dataIn = cell(1,256);
-symboles_out = cell(1,256); 
-before_canal = cell(1,256); 
-data_concat = [0;0];
+dataIn = cell(1,nb_channels);
+symboles_out = cell(1,nb_channels); 
+before_canal = cell(1,nb_channels); 
+data_concat = zeros(2*nb_channels,1);
+length_prefixe = 32;
 
 %% Transmitter side %%
 
 for i = 1:nb_channels
     
     if bit_alloc(i) == 4
-        data = bit_In(1:2);
-        bit_In(1:2) = [];
+        data = bit_In(1:log2(4));
+        bit_In(1:log2(4)) = [];
     elseif bit_alloc(i) == 8
-        data = bit_In(1:3);
-        bit_In(1:3) = [];
+        data = bit_In(1:log2(8));
+        bit_In(1:log2(8)) = [];
     elseif bit_alloc(i) == 16
-        data = bit_In(1:4);
-        bit_In(1:4) = [];
+        data = bit_In(1:log2(16));
+        bit_In(1:log2(16)) = [];
     end
     
     dataIn{i} = data;
@@ -36,7 +43,6 @@ for i = 1:nb_channels
 end
 
 %% Add the prefix cyclic %%
-length_prefixe = 32;
 length_data = length(data_concat);
 for l = 1:length_prefixe
      data_concat(length_data+l) = data_concat(l);  
