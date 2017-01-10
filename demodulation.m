@@ -1,5 +1,15 @@
 function [dataOut] = demodulation(before_canal, bit_alloc)
 
+%% Parameters %%
+% - Inputs :
+%   * before_canal : real symbols received after the transmission into the canal
+%   * bit_alloc : vector containing types of QAM by canal
+%
+% - Outputs :
+%   * dataOut : bits out
+
+%% Variables %%
+
 nb_channels = 256;
 after_canal = cell(1,256); 
 dataOut = cell(1,256);

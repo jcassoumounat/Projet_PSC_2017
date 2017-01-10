@@ -1,8 +1,15 @@
 function [data_reel] = modulationDMT(data_qam)
 
-%% Concernant les variables %%
-% data_qam : symboles QAM en colonne
+% Return the symboles DMT for every sub-canal
 
+%% Parameters %
+% - Inputs :
+%   * data_qam : symbols received after the QAM modulation
+%
+% - Outputs :
+%   * data_reel : symbols DMT real ([Real;Imaginary;Real;Imaginary...])
+
+%% IFFT %%
 data_dmt = ifft(data_qam);
 
 %% Transformation en signal réel %%

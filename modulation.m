@@ -1,10 +1,13 @@
 function [dataIn, data_concat] = modulation(bit_In, bit_alloc)
 
-% bit_In : bits incomming
-% bit_alloc : vector containing types of QAM by canal
-
-%dataIn : bits dispatch in the canals
-%data_concat : data before sending to the canal
+%% Parameters %%
+% - Inputs :
+%   * bit_In : bits incomming
+%   * bit_alloc : vector containing types of QAM by canal
+%
+% - Outputs :
+%   * dataIn : bits dispatch in the canals
+%   * data_concat : data before sending to the canal
 
 global j
 j=1;
