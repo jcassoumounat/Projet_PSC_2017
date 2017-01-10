@@ -19,12 +19,8 @@ indice2 = 2;
 length_prefixe = 32;
 
 
-%% Remove the prefix cyclic %%  
-length_data = length(before_canal) - length_prefixe;
-
-for j = 1:length_data
-     after_remove_prefix(j) = before_canal(j);  
-end
+%% Remove the prefix cyclic %%
+after_remove_prefix(1:length(before_canal)-length_prefixe) = before_canal(1+length_prefixe:length(before_canal));
 
 %% Dispatch the 256 canals %%
 
@@ -39,7 +35,6 @@ end
 for i = 1:nb_channels
     after_canal{i} = demodulationDMT(after_canal{i});
     dataOut{i} = demodulationQAM(after_canal{i},bit_alloc,i);
-    
 end
 end
 

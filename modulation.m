@@ -47,9 +47,8 @@ end
 
 %% Add the prefix cyclic %%
 length_data = length(data_concat);
-for l = 1:length_prefixe
-     data_concat(length_data+l) = data_concat(l);  
-end
+data_concat(1+length_prefixe:length_data+length_prefixe) = data_concat(1:length_data); 
+data_concat(1:length_prefixe) = data_concat(1+length_data:length_data+length_prefixe);
 
 end
 
