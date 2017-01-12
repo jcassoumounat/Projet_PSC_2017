@@ -1,4 +1,4 @@
-function [signal_convolved] = signal_inv(h_freq, signal_in)
+function [signal_convolved] = egalisation(h_freq, signal_in)
 
 h_inv = zeros(1, length(h_freq));
 for i = 1:length(h_freq)
