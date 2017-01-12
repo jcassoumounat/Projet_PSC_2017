@@ -9,7 +9,7 @@ function  [output_signal, rep_imp] = channel( input_signal )
 %%
 %Parameters of the line
     % frequency bandwith
-    half_bandwidth = [0:1104000/256:1104000-(1104000/256)];
+    half_bandwidth = [0:1104000/256:1104000-(1104000/256)]
     bandwidth = [0:2208000/512:2208000-(2208000/512)];
     
     %Constants 
@@ -33,7 +33,7 @@ function  [output_signal, rep_imp] = channel( input_signal )
 
     %Size of the number of discret samples
     tableau_temps = [0:1:511];   % We need not forget that when we want our impulse response we need the full period of 512 points. We therefor need to perform a hermetian symmetry to obtain a signal on 512 samples.
-
+    tableau_temps2 = [0:1:255];
     
  %%
  
@@ -45,12 +45,15 @@ function  [output_signal, rep_imp] = channel( input_signal )
 
     %Frequency response with reflexion
     rep_freq = 0.5 * (1 + 50/100) * exp(- gamma * longueur)  ./ (1 - 50/100 * 50/100 * exp(-2 * gamma * longueur));
+    figure; plot(tableau_temps2*Te, rep_freq);
    
     %Symetric frequency response
     rep_freq_sym = fliplr(conj(rep_freq));
+    
 
     %Total frequency response
     rep_freq_tot = [rep_freq , rep_freq_sym];
+    figure; plot(tableau_temps*Te, rep_freq_tot);
 
     %Impulsionnal response
     rep_imp = ifft(rep_freq_tot);
@@ -59,13 +62,18 @@ function  [output_signal, rep_imp] = channel( input_signal )
 %plot(tableau_temps, rep_imp);
 
     %Impulsionnal response 
-    %figure; plot(tableau_temps*Te, rep_imp);
+    figure; plot(tableau_temps*Te, rep_imp);
+    title('impulsionnal response');
 
 
 
     %convolution of the input signal with the impulsionnal response
     output_signal = filter(rep_imp, 1 , input_signal);
     %output_signal = conv(input_signal,rep_imp,'same')
+    rep_imp_moitie = rep_imp(1:256);
+    rep_freq_moitie = fft(rep_imp_moitie);
+    figure; plot(half_bandwidth, rep_freq_moitie);
+    
 
 end
 
