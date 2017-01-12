@@ -19,5 +19,6 @@ function [output_data] = deframe(output_frame)
     L = length(output_frame);
     depth = 3;
     
-    output_data = [decoderRS(output_frame(1 : L/2)) decoderRS(deinterleaver(output_frame(L/2+1 : L), depth)')]
+    output_data = [decoderRS(output_frame(1 : L/2)) decoderRS(deinterleaver(output_frame((L/2)+1 : L), depth))];
+    %output_data = [decoderRS(output_frame(1 : L/2)) decoderRS(output_frame((L/2)+1 : L))];
 end

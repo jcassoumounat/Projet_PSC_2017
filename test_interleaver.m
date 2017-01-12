@@ -1,7 +1,10 @@
-data = [1:10]
-Ncols= 4;
+test_vector_bit = random_digital_signal(176, 0.5);
 
-interleaved_data = interleaver(data, Ncols)
-% size(interleaved_data);
+period = 3;
 
-deinterleaver_vector = deinterleaver(interleaved_data, Ncols)
+interleaved_vector   = interleaver(test_vector_bit, period);
+length(interleaved_vector)
+deinterleaver_vector = deinterleaver(interleaved_vector, period);
+length(deinterleaver_vector)
+
+res = isequal(test_vector_bit, deinterleaver_vector)

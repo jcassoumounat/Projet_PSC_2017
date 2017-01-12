@@ -1,10 +1,11 @@
 %% Test Frame Building %%
 
-input_data = random_digital_signal(48, 0.5)
+input_data = random_digital_signal(64, 0.5);
 
 f = frame(input_data);
+output_data = deframe(f);
 
-output_data = deframe(f)
+isequal(input_data, output_data)
 
 % sframe = random_digital_signal(48*68, 0.5)
 % crc_sframe = crcenc(sframe')

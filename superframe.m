@@ -1,30 +1,39 @@
 function [sframe, remaining_data] = superframe(data, allocation_table)
     CRC_size    = 8;  % first bits of the superframe included in frame0
-    FEC_size    = 32; % à changer en passant à une variable globale de la forme 2 * m * (n - k)
+    FEC_size    = 32; % ï¿½ changer en passant ï¿½ une variable globale de la forme 2 * m * (n - k)
     nb_frames   = 68; % number of frames in a superframe
     remaining_data = [];
+    nb_data_treated = 0;
+    data_size = length(data);
     
     %% Frame parameters %%
     fsize       = sum(log2(allocation_table))   % sum of nb of bits of the bit allocation table
-    fdata_size       = fsize - FEC_size              % frame data size 
+    fdata_size  = fsize - FEC_size              % frame data size 
     
     %% Superframe parameters %%
     crc_sfsize  = fsize * nb_frames;            % bits
-    sfdata      = fdata_size * nb_frames - CRC_size; % bits, remove CRC_size bits due to frame 0
+    sfdata_size = fdata_size * nb_frames; % bits, remove CRC_size bits due to frame 0 !!! -CRC_size
       
     %% frame0 %%
     for i = 1 : fdata_size
         fdata(i) = data(i);
+        nb_data_treated = nb_data_treated + 1;
     end 
-    sframe = fdata;
+    sframe = frame(fdata);
     
     %% frame 1 -> 67 %%
-    for frame_nb = 2 : 67
+    for frame_nb = 2 : 68
         fdata = [];
         for i = 1 : fdata_size
-            fdata(i) = data((frame_nb-1) * fdata_size + i);
+            fdata(i) = data((frame_nb-1)*fdata_size + i);
+            nb_data_treated = nb_data_treated + 1;
         end
         sframe = [sframe frame(fdata)];
+    end
+    
+    %% remaining data %%
+    if nb_data_treated < data_size
+        remaining_data = data(nb_data_treated+1 : data_size);
     end
 end
 

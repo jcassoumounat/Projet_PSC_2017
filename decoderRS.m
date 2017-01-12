@@ -10,17 +10,17 @@ function [data] = decoderRS(rs_data)
 
     %% Encoding parameters %%
     m = 8;                           % Number of bits per symbol
-    n = ceil(length(rs_data)/m);     % Number of symbols to encode
+    n = floor(length(rs_data)/m);    % Number of symbols to encode
     k = n - 2;                       % Number of symbols in the code word. n must be equal to or greater than k + 2
-    int_rs_data = [];
+    int_rs_data = [];%zeros(1, n);
     data = [];
     
     %% Encoding %%
     % Convert data to integer
     for i = 1 : n
-        int_rs_data(i)  = bi2de(rs_data((i-1)*m + 1 : i*m), 'left-msb');
+        temp1 = rs_data((i-1)*m + 1 : i*m);
+        int_rs_data(i)  = bi2de(temp1, 'left-msb');
     end
-   
     
     % Create codeword based on GF(2^m) from int_rs_data
     codeword = gf(int_rs_data, m);
