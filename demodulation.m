@@ -1,4 +1,4 @@
-function [dataOut, demodulate_signal] = demodulation(before_canal, bit_alloc)
+function [dataOutMat, demodulate_signal] = demodulation(before_canal, bit_alloc)
 
 %% Parameters %%
 % - Inputs :
@@ -15,6 +15,7 @@ after_canal = cell(1,256);
 dataOut = cell(1,256);
 after_remove_prefix = zeros(256,1);
 length_prefixe = 32;
+indice = 1;
 
 %% Remove the prefix cyclic %%
 after_remove_prefix(1:length(before_canal)-length_prefixe) = before_canal(1+length_prefixe:length(before_canal));
@@ -27,5 +28,13 @@ end
 for i = 1:nb_channels
     dataOut{i} = demodulationQAM(after_canal{i},bit_alloc,i);
 end
+
+for i = 1:length(dataOut)
+    for j = 1:length(dataOut{i})
+        dataOutMat(indice) = dataOut{i}(j);
+        indice = indice + 1;
+    end
+end
+
 end
 
