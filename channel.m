@@ -1,17 +1,22 @@
-function  [output_signal] = channel( input_signal )
-%This function represents a model of the ADSL channel. It is done
+function  [output_signal, rep_imp] = channel( input_signal )
+%This function represents a model of the ADSL channel. 
 %for a basic ADSL line, ie: 256 channels
+    %INPUT: The frame that needs to be transmitted through the channel
+    
+    %OUTPUT: output_signal: the signal at the exit of the channel
+    %        remp_imp: the impulsionnal response
 
 %%
 %Parameters of the line
     % frequency bandwith
-    half_bandwith = [0:1104000/256:1104000-(1104000/256)];
+    half_bandwidth = [0:1104000/256:1104000-(1104000/256)];
     bandwidth = [0:2208000/512:2208000-(2208000/512)];
     
     %Constants 
     perme_vide = 4*pi*10^-7 ;        %vacuum permeability u0
     permi_vide = 1/(36*pi)*10^-9 ;   %vacuum permitivity e0
     permi_rela = 2;                  %relative permitivity between the two isulators
+    Te = 1/1104000;                  %sample time
 
     %parameters of the line
     d = 0.001           ;            % diameter of the wire
@@ -23,8 +28,8 @@ function  [output_signal] = channel( input_signal )
     %primary parameters of the line
     L = (perme_vide/pi)*log(2*D/d);                                     %Linear Inductance
     C = (pi*permi_vide*permi_rela)/(log(2*D/d));                        %Linear capacity
-    G = C*10^-3*2*pi*demi_plage;                                        %Linear conductance
-    R = sqrt((perme_vide*demi_plage)/(pi*conduct))/(d*sqrt(1-(d/D)^2)); %Linear electrical resistance
+    G = C*10^-3*2*pi*half_bandwidth;                                        %Linear conductance
+    R = sqrt((perme_vide*half_bandwidth)/(pi*conduct))/(d*sqrt(1-(d/D)^2)); %Linear electrical resistance
 
     %Size of the number of discret samples
     tableau_temps = [0:1:511];   % We need not forget that when we want our impulse response we need the full period of 512 points. We therefor need to perform a hermetian symmetry to obtain a signal on 512 samples.
@@ -33,7 +38,7 @@ function  [output_signal] = channel( input_signal )
  %%
  
     %The gamma parameter
-    gamma = sqrt(  (R + j*L*2*pi*demi_plage).*(G + j*C*2*pi*demi_plage)  );
+    gamma = sqrt(  (R + j*L*2*pi*half_bandwidth).*(G + j*C*2*pi*half_bandwidth)  );
 
     %Frequency response without reflection
     %rep_freq = 1/2*exp(-gamma*longueur);
@@ -54,12 +59,13 @@ function  [output_signal] = channel( input_signal )
 %plot(tableau_temps, rep_imp);
 
     %Impulsionnal response 
-    plot(tableau_temps*Te, rep_imp);
+    %figure; plot(tableau_temps*Te, rep_imp);
 
 
 
     %convolution of the input signal with the impulsionnal response
-    ouput_signal = conv2(input_signal,rep_imp)
+    output_signal = filter(rep_imp, 1 , input_signal);
+    %output_signal = conv(input_signal,rep_imp,'same')
 
 end
 
