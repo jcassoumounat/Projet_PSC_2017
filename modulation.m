@@ -16,8 +16,6 @@ j=1;
 nb_channels = 256;
 dataIn = cell(1,nb_channels);
 symboles_out = cell(1,nb_channels); 
-before_canal = cell(1,nb_channels); 
-data_concat = zeros(2*nb_channels,1);
 length_prefixe = 32;
 symbole = zeros(256,1);
 

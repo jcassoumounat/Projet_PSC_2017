@@ -14,11 +14,7 @@ nb_channels = 256;
 after_canal = cell(1,256); 
 dataOut = cell(1,256);
 after_remove_prefix = zeros(256,1);
-indice1 = 1;
-indice2 = 2;
 length_prefixe = 32;
-demodulate_signal = cell(1,256); 
-
 
 %% Remove the prefix cyclic %%
 after_remove_prefix(1:length(before_canal)-length_prefixe) = before_canal(1+length_prefixe:length(before_canal));
