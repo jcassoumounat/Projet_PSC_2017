@@ -1,4 +1,4 @@
-function [dataOut] = demodulation(before_canal, bit_alloc)
+function [dataOut, demodulate_signal] = demodulation(before_canal, bit_alloc)
 
 %% Parameters %%
 % - Inputs :
@@ -17,23 +17,18 @@ after_remove_prefix = zeros(256,1);
 indice1 = 1;
 indice2 = 2;
 length_prefixe = 32;
+demodulate_signal = cell(1,256); 
 
 
 %% Remove the prefix cyclic %%
 after_remove_prefix(1:length(before_canal)-length_prefixe) = before_canal(1+length_prefixe:length(before_canal));
 
-%% Dispatch the 256 canals %%
-
-for l = 1:length(after_remove_prefix)/2
-    after_canal{l} = after_remove_prefix(indice1:indice2);
-    indice1 = indice1+2;
-    indice2 = indice2+2;
-end
-
 %% Demodulation %%
-
+demodulate_signal = demodulationDMT(after_remove_prefix);
+for p = 1:nb_channels
+    after_canal{p} = demodulate_signal(p);
+end
 for i = 1:nb_channels
-    after_canal{i} = demodulationDMT(after_canal{i});
     dataOut{i} = demodulationQAM(after_canal{i},bit_alloc,i);
 end
 end

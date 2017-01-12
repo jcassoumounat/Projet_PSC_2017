@@ -1,4 +1,4 @@
-function [X] = filter_reception(H,Y)
+function [vec, A] = filter_reception(H)
 
 %% Parameters %%
 % - Inputs :
@@ -8,7 +8,14 @@ function [X] = filter_reception(H,Y)
 % - Outputs :
 %   * X : bits after the filter
 
-X = filter(inv(H),1,Y);
+numA = 5;
+A = zeros(numA,numA);
+vec = [H  zeros(1,numA-numel(H))];
+for i=0:size(A,1)
+    A(i+1,:) = circshift(vec,[1 i]);
+end
+
+%X = filter(inv(H),1,Y);
 
 
 end

@@ -1,4 +1,4 @@
-function [dataIn, data_concat] = modulation(bit_In, bit_alloc)
+function [dataIn, data_concat, symboles_out] = modulation(bit_In, bit_alloc)
 
 %% Parameters %%
 % - Inputs :
@@ -9,7 +9,7 @@ function [dataIn, data_concat] = modulation(bit_In, bit_alloc)
 %   * dataIn : bits dispatch in the canals
 %   * data_concat : data before sending to the canal
 
-global j
+global j 
 j=1;
 
 %% Initialisation of parameters %%
@@ -19,6 +19,7 @@ symboles_out = cell(1,nb_channels);
 before_canal = cell(1,nb_channels); 
 data_concat = zeros(2*nb_channels,1);
 length_prefixe = 32;
+symbole = zeros(256,1);
 
 %% Transmitter side %%
 
@@ -37,13 +38,10 @@ for i = 1:nb_channels
     
     dataIn{i} = data;
     symboles_out{i} = modulationQAM(dataIn{i},bit_alloc,i);
-    before_canal{i} = modulationDMT(symboles_out{i});
-        
-    % Concatenate the 512 values
-    data_concat(j) = before_canal{i}(1);
-    data_concat(j+1) = before_canal{i}(2);
-    j = j+2;
+    symbole = cell2mat(symboles_out);
 end
+
+data_concat = modulationDMT(symbole);
 
 %% Add the prefix cyclic %%
 length_data = length(data_concat);
