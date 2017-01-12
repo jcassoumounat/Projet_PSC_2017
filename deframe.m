@@ -1,4 +1,4 @@
-function [output_fast_data, output_interleaved_data] = deframe(output_frame, fast_size, interleaving_size)
+function [output_data] = deframe(output_frame)
 %%
 % Returns the data inside the frame :
 % - the data from the fast path
@@ -19,6 +19,5 @@ function [output_fast_data, output_interleaved_data] = deframe(output_frame, fas
     L = length(output_frame);
     depth = 3;
     
-    output_fast_data        = decoderRS(output_frame(1 : L/2), fast_size);
-    output_interleaved_data = decoderRS(deinterleaver(output_frame(L/2+1 : L), depth)', interleaving_size);
+    output_data = [decoderRS(output_frame(1 : L/2)) decoderRS(deinterleaver(output_frame(L/2+1 : L), depth)')]
 end

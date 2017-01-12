@@ -1,45 +1,30 @@
-function [sframe, remaining_data] = superframe(data, rate, allocation_table)
-    sframe_duration = 0.017;                     % seconds
-    frame_duration  = 0.00025;                   % seconds
-    frame_size      = 48;                        % bits
-    sframe_size     = rate * sframe_duration;    % bits
+function [sframe, remaining_data] = superframe(data, allocation_table)
+    CRC_size    = 8;  % first bits of the superframe included in frame0
+    FEC_size    = 32; % à changer en passant à une variable globale de la forme 2 * m * (n - k)
+    nb_frames   = 68; % number of frames in a superframe
+    remaining_data = [];
     
-    sum         = 0;   % sum of data added from data to sframe
-    frame       = 0;   % size of the i-th frame's data
-    size_iframe = 0;   % size of the i-th frame's data
-   
-    for i = 1 : 2 : 67
-        %% Reinitialization of fast and interleaving buffers %%
-        fframe_data = [];  % data for fast path
-        iframe_data = [];  % data for interleaving path
-        
-        %% Frame building %%
-        %% Recuperation of next fast and interleaving data size %%
-        size_fframe = allocation_table(i);
-        if(i < 67)
-            size_iframe = allocation_table(i+1);
-        else
-            size_iframe = 0
+    %% Frame parameters %%
+    fsize       = sum(log2(allocation_table))   % sum of nb of bits of the bit allocation table
+    fdata_size       = fsize - FEC_size              % frame data size 
+    
+    %% Superframe parameters %%
+    crc_sfsize  = fsize * nb_frames;            % bits
+    sfdata      = fdata_size * nb_frames - CRC_size; % bits, remove CRC_size bits due to frame 0
+      
+    %% frame0 %%
+    for i = 1 : fdata_size
+        fdata(i) = data(i);
+    end 
+    sframe = fdata;
+    
+    %% frame 1 -> 67 %%
+    for frame_nb = 2 : 67
+        fdata = [];
+        for i = 1 : fdata_size
+            fdata(i) = data((frame_nb-1) * fdata_size + i);
         end
-        
-        %%
-        % Test if it remains enough space in the superframe to add fast
-        % data
-        if(sum + size_fframe <= sframe_size)
-            fframe_data = data(sum + 1 : sum + size_fframe + 1);
-            sum = sum + size_fframe;
-        else
-            fframe_data
-        end
-        
-        %%
-        % Test if it remains enough space in the superframe to add
-        % interlveaving data
-        if(sum + size_iframe <= sframe_size)
-            iframe_data = data(sum + 1 : sum + size_iframe + 1);
-        end
-        
-            
+        sframe = [sframe frame(fdata)];
     end
 end
 
