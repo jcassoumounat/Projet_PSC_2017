@@ -1,11 +1,7 @@
-vector_size=128;
+data = [1:10]
+Ncols= 4;
 
-period = 12;
+interleaved_data = interleaver(data, Ncols)
+% size(interleaved_data);
 
-test_vector_bit = test_bit_vector(vector_size)
-
-interleaved_vector = interleaver(test_vector_bit, period)
-
-size(interleaved_vector);
-
-deinterleaver_vector = deinterleaver(interleaved_vector, period)
+deinterleaver_vector = deinterleaver(interleaved_data, Ncols)
