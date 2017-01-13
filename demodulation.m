@@ -17,7 +17,7 @@ after_remove_prefix = zeros(256,1);
 length_prefixe = 32;
 indice = 1;
 
-%% Remove the prefix cyclic %%
+%% Remove the prefix %%
 after_remove_prefix(1:length(before_canal)-length_prefixe) = before_canal(1+length_prefixe:length(before_canal));
 
 %% Demodulation %%
