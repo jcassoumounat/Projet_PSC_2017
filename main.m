@@ -31,13 +31,16 @@ function [  ] = main()
     frame = zeros(1,sum(allocation_qam/2));
     frame(50) = 1;
     
+    %%jesuisDupre
+       
+    
 %% processing frame in qam and dmt
     [bobi , dmt_frame, qam_frame] = modulation(frame, allocation_qam);
 
 %% processing the frame through the channel
-    [channel_frame, rep_imp,rep_freq_tot] = channel(dmt_frame);
-    figure; plot(tableau_temps*Te, abs(channel_frame));
-    title('signal after the channel');
+%    [channel_frame, rep_imp,rep_freq_tot] = channel(dmt_frame);
+%    figure; plot(tableau_temps*Te, abs(channel_frame));
+%    title('signal after the channel');
 
 %%Noise addition 
 
@@ -55,15 +58,16 @@ function [  ] = main()
     
     
 %% Eqalisation
-     with_prefixe = egalisation(rep_freq_tot, channel_frame);
+%     with_prefixe = egalisation(rep_freq_tot, channel_frame);
 
      
      
 %% Demodulation
 
-   [bitsOut, demodulation_dmt_frame] = demodulation(with_prefixe, allocation_qam);
+   [bitsOut, demodulation_dmt_frame] = demodulation(dmt_frame, allocation_qam);
     
-    
+ %%jesuisdéDupre
+
 
 
 end
