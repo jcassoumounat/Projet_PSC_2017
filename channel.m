@@ -41,19 +41,19 @@ function  [output_signal, rep_imp] = channel( input_signal )
     gamma = sqrt(  (R + j*L*2*pi*half_bandwidth).*(G + j*C*2*pi*half_bandwidth)  );
 
     %Frequency response without reflection
-    %rep_freq = 1/2*exp(-gamma*longueur);
+    rep_freq = 1/2*exp(-gamma*longueur);
 
     %Frequency response with reflexion
-    rep_freq = 0.5 * (1 + 50/100) * exp(- gamma * longueur)  ./ (1 - 50/100 * 50/100 * exp(-2 * gamma * longueur));
-    figure; plot(tableau_temps2*Te, rep_freq);
+    %rep_freq = 0.5 * (1 + 50/100) * exp(- gamma * longueur)  ./ (1 - 50/100 * 50/100 * exp(-2 * gamma * longueur));
+    figure; plot(tableau_temps2*Te, abs(rep_freq));
    
     %Symetric frequency response
     rep_freq_sym = fliplr(conj(rep_freq));
     
 
     %Total frequency response
-    rep_freq_tot = [rep_freq , rep_freq_sym];
-    figure; plot(tableau_temps*Te, rep_freq_tot);
+    rep_freq_tot = [rep_freq ,0 , rep_freq_sym(2:256)];
+    figure; plot(tableau_temps*Te, abs(rep_freq_tot));
 
     %Impulsionnal response
     rep_imp = ifft(rep_freq_tot);
@@ -62,17 +62,18 @@ function  [output_signal, rep_imp] = channel( input_signal )
 %plot(tableau_temps, rep_imp);
 
     %Impulsionnal response 
-    figure; plot(tableau_temps*Te, rep_imp);
+    figure; plot(tableau_temps*Te, abs(rep_imp));
     title('impulsionnal response');
 
 
 
     %convolution of the input signal with the impulsionnal response
-    output_signal = filter(rep_imp, 1 , input_signal);
+    output_signal = filter(abs(rep_imp), 1 , input_signal);
     %output_signal = conv(input_signal,rep_imp,'same')
     rep_imp_moitie = rep_imp(1:256);
     rep_freq_moitie = fft(rep_imp_moitie);
-    figure; plot(half_bandwidth, rep_freq_moitie);
+    figure; plot(half_bandwidth, abs(rep_freq_moitie));
+    title('impulsionnal response');
     
 
 end
