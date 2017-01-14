@@ -1,3 +1,21 @@
-test_vect = test_bit_vector(32);
-[sent_vector, fast_data_size] = frame(test_vect, 8)
-decoded_vector = deframe(sent_vector, 8)
+%% Test Frame Building %%
+
+input_data = random_digital_signal(64, 0.5);
+
+f = frame(input_data);
+output_data = deframe(f);
+
+isequal(input_data, output_data)
+
+% sframe = random_digital_signal(48*68, 0.5)
+% crc_sframe = crcenc(sframe')
+% deccrc_sframe = crcdec(crc_sframe)
+% sframe - 
+
+% sframe_duration = 0.017
+% rate = 4000 * 69 / 68 %bauds
+% sframe_size = sframe_duration * rate
+% 
+% frame_duration = 0.00025
+% rate = 4000 * 69 / 68 %bauds
+% frame_size = frame_duration * rate

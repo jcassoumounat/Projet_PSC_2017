@@ -1,26 +1,24 @@
-function [deframe] = deframe(frame, FEC_size)
-%Get data from an ADSL frame
-%   deframe : a vector compsed of bits of decoded data
-%
-%   frame : frame of ADSL
-%   data_vector_size : size of fast data we put in the frame
-%   FC_size : size of non data bits
-
-frame_size = size(frame, 2);
-fast_data_size = round((frame_size-FEC_size)/2) - FEC_size;
-
-%interleaved data
-for i = fast_data_size+FEC_size+1 : frame_size
-    interleaved_data(i-(fast_data_size+FEC_size)) = frame(i);
+function [output_data] = deframe(output_frame)
+%%
+% Returns the data inside the frame :
+% - the data from the fast path
+% - the data from the interleaving path
+% To do so, the first half of the frame is RS decoded while the second is
+% deinterleaved then RS decoded.
+%gains
+% Parameters :
+% - Inputs :
+%   * output_frame  :   binary vector received
+% 
+% - Outputs :
+%   * output_fast_data        :    binary vector for the data that were 
+%                                  inside the fast path half.
+%   * output_interleaved_data :    binary vector for the data that were
+%                                  inside the interleaving path half.
+%%
+    L = length(output_frame);
+    depth = 3;
+    
+    output_data = [decoderRS(output_frame(1 : L/2)) decoderRS(deinterleaver(output_frame((L/2)+1 : L), depth))];
+    %output_data = [decoderRS(output_frame(1 : L/2)) decoderRS(output_frame((L/2)+1 : L))];
 end
-deinterleaved_data = deinterleaver(interleaved_data, 6); %6 : period of interleaving : MUST BE the same as in frame.m
-
-%fast data
-for i = 1 : fast_data_size
-    fast_data(i) = frame(i);
-end
-
-%all reed solomon coded data
-coded_data = [fast_data deinterleaved_data];
-
-deframe = dereed_solomon_temp(coded_data);

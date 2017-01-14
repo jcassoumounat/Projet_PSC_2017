@@ -1,57 +1,35 @@
-function [frame0, frame1, frame34, frame35, decoded_superframe] = desuperframe (superframe_vector)
-%get data from an ADSL superframe
-%   frame0 : 1st byte of the frame containing info about transmission -> SIZE = 8 bits
-%   frame1 : 2nd byte of the frame containing info about transmission -> SIZE = 8 bits
-%   frame34 : 34th frame containig info on the channel -> SIZE = 8 bits
-%   frame35 : 35th frame containig info on the channel -> SIZE = 8 bits
-%   frame : decoded data 
-%
-%   superframe : vector of bits we want to decode
+function [desframe, remaining_cdata] = desuperframe(csframes, allocation_table)
+    % Find the data of a superframe
+    % - desframes   : data from coded superframe
+    % - remaining_data      : [] if all data are decoded; otherwise vector of data which are not in the superframe (superframes length > 1 superframe)
+    %
+    %   csframe : superframes we want to decode
+    %   allocation_table : calculated with water filling
+     
+    csframe_size = length(csframes);
+    CRC_size    = 8;            % first bits of the superframe included in frame0
+    FEC_size    = 32;           % � changer en passant � une variable globale de la forme 2 * m * (n - k)
+    nb_frames   = 68;           % number of frames in a superframe
+    remaining_cdata = [];
+    desframe = [];
+    nb_data_treated = 0;
 
-INFO_FRAME_SIZE = 8; %size of frame0,1,34,35
-NB_FRAMES_SUPERFRAME = 68; %do not count the last one for the desuperframe
-FEC_SIZE = 8;
-superframe_size = size(superframe_vector,2);
-coded_data_size = superframe_size - 4*INFO_FRAME_SIZE; %4 info frames
-frame_size = coded_data_size / (NB_FRAMES_SUPERFRAME-4); %4 info frames
+    %% Frame parameters %%
+    f_size = sum(log2(allocation_table))   % sum of nb of bits of the bit allocation table
 
-decoded_superframe=[];
-
-%frame0
-for j = 1 : INFO_FRAME_SIZE
-    frame0(j) = superframe_vector(j);
-end
-
-%frame1
-for j = 1 : INFO_FRAME_SIZE
-    frame1(j) = superframe_vector(j + INFO_FRAME_SIZE);
-end
-
-%frame 2 to 33
-nb_treated_frames = 0;
-for i = 1 : 32
-    for j = 1 : frame_size
-        temp_frame(j) = superframe_vector(2*INFO_FRAME_SIZE+nb_treated_frames*frame_size + j);
+    %% frame 1 -> 68 %%
+    for frame_nb = 1 : 68
+        cframe = [];
+        for j = 1 : f_size
+            cframe(j) = csframes((frame_nb-1) * f_size + j);
+            nb_data_treated = nb_data_treated + 1;
+        end
+        desframe = [desframe deframe(cframe)];
     end
-    decoded_superframe = [decoded_superframe deframe(temp_frame, FEC_SIZE)];
-    nb_treated_frames = nb_treated_frames + 1; 
-end
 
-%frame34
-for j = 1 : INFO_FRAME_SIZE
-    frame34(j) = superframe_vector(2*INFO_FRAME_SIZE+nb_treated_frames*frame_size + j);
-end
-
-%frame35
-for i = j : INFO_FRAME_SIZE
-    frame35(j) = superframe_vector(2*INFO_FRAME_SIZE+nb_treated_frames*frame_size + INFO_FRAME_SIZE  + j);
-end
-
-%frame 36 to 68
-for i = 1 : 32
-    for j = 1 : frame_size
-        temp_frame(j) = superframe_vector(4*INFO_FRAME_SIZE+nb_treated_frames*frame_size + j);
+     %% remaining data %%
+    if nb_data_treated < csframe_size
+        remaining_cdata = csframes(nb_data_treated+1 : csframe_size);
     end
-    decoded_superframe = [decoded_superframe deframe(temp_frame, FEC_SIZE)];
-    nb_treated_frames = nb_treated_frames + 1; 
+
 end

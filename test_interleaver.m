@@ -1,11 +1,10 @@
-vector_size=128;
+test_vector_bit = random_digital_signal(176, 0.5);
 
-period = 12;
+period = 3;
 
-test_vector_bit = test_bit_vector(vector_size)
+interleaved_vector   = interleaver(test_vector_bit, period);
+length(interleaved_vector)
+deinterleaver_vector = deinterleaver(interleaved_vector, period);
+length(deinterleaver_vector)
 
-interleaved_vector = interleaver(test_vector_bit, period)
-
-size(interleaved_vector);
-
-deinterleaver_vector = deinterleaver(interleaved_vector, period)
+res = isequal(test_vector_bit, deinterleaver_vector)
