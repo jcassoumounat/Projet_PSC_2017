@@ -1,4 +1,4 @@
-function [  ] = main()
+function [] = main()
 %%
     %estimated_channel: represents the average estimated response of 30 responses of the channel to the initialisation frame
     %estimated noise : represents the average estimated noise of 30 responses of the channel to the initialisation frame
@@ -17,8 +17,8 @@ function [  ] = main()
     
     %% Build the frame to send for estimation
 %     frame = zeros(1, sum(log2(allocation_qam)));
-%     frame(50) = 1;   
-    frame = random_digital_signal(sum(log2(allocation_qam)), 0.25);
+%     frame(50) = 1;
+    frame = random_digital_signal(sum(log2(allocation_qam)), 0.001);
     
     %% Processing frame in qam and dmt
     [~, dmt_frame, ~] = modulation(frame, allocation_qam);
@@ -46,8 +46,9 @@ function [  ] = main()
     title('Signal after the noise');
         
 %% CrossTalk
-%         noise_frame = SignalCrossTalk(channel_frame);
-%         figure; plot(diaphonie);
+%         noise_frame = SignalCrossTalk(fft(rep_imp), channel_frame);
+%         figure;
+%         plot(diaphonie);
 %         title('signal with noise');
 %% SignalDamaged
 %         noise_frame = (channel_frame);

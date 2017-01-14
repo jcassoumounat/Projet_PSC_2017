@@ -2,7 +2,7 @@
 N       = 511;
 Tmax    = 10;
 t       = (0 : Tmax/N : Tmax);
-sigma   = 0.01;
+sigma   = 0.001;
 
 %% Compute signals %%
 % Signal entering in the channel
