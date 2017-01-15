@@ -16,4 +16,4 @@ i = 1;
 while ((i <= length(berQAM16)) && (berQAM16(i) > 10^(-7)))
     i = i + 1;
 end
-threshold_snrQAM16 = snrQAM16(i)
+threshold_snrQAM16 = snrQAM16(i);

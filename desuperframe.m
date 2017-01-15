@@ -16,7 +16,7 @@ function [desframe, err, remaining_cdata] = desuperframe(csframes, allocation_ta
     nb_data_treated = 0;
 
     %% Frame parameters %%
-    f_size = sum(log2(allocation_table))   % sum of nb of bits of the bit allocation table
+    f_size = sum(log2(allocation_table));   % sum of nb of bits of the bit allocation table
 
     %% frame 1 -> 68 %%
     for frame_nb = 1 : 68
