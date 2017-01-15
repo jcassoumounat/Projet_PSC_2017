@@ -9,10 +9,6 @@ function [suite_symboles_out] = demodulationDMT(signal_received)
 % - Outputs :
 %   * suite_symboles_out : symboles QAM
 
-j = 1;
-signal_comp = zeros(length(signal_received)/2,1);
-
-
 %% FFT %%
 suite_symboles_out = fft(signal_received);
     

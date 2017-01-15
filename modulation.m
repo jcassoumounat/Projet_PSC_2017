@@ -37,7 +37,6 @@ for i = 1:nb_channels
     dataIn{i} = data;
     symboles_out{i} = modulationQAM(dataIn{i},bit_alloc,i);
     symbole = cell2mat(symboles_out);
-    symbole_test = symbole';
 end
 
 data_concat = modulationDMT(symbole);

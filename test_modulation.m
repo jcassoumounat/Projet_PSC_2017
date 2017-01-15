@@ -7,4 +7,4 @@ bit_In = randi([0 1], nb_bits_a_transmettre, 1);
 
 %%%% Transmission into the channel %%%%
 
-[dataOut, after_canal] = demodulation(data_concat, bit_alloc);
+[dataOut, after_canal, test] = demodulation(data_concat, bit_alloc);
