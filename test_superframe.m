@@ -3,7 +3,7 @@ script_allocation;
 data_to_send = [];
 nb_superframe    = 2;
 
-data_size        = nb_superframe *(68 * (sum(log2(alloc)) - 32)) %32 = FEC * 2
+data_size        = nb_superframe *(68 * (sum(log2(alloc)) - 32) - 8) %32 = FEC * 2 and 8 = CRC_size
 input_data       = random_digital_signal(data_size, 0.5);
 temp = input_data;
 
@@ -16,7 +16,8 @@ end
 %% reception %%
 output_data = [];
 while ~isequal(data_to_send, [])
-    [desuperframe1, remain2] = desuperframe(data_to_send, alloc);
+    [desuperframe1, err, remain2] = desuperframe(data_to_send, alloc);
+    err
     output_data = [output_data desuperframe1];
     data_to_send = remain2;
 end

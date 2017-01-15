@@ -12,6 +12,7 @@ function [sframe, remaining_data] = superframe(data, allocation_table)
     remaining_data = [];
     nb_data_treated = 0;
     data_size = length(data);
+    sframe = [];
     
     %% Frame parameters %%
     fsize       = sum(log2(allocation_table))   % sum of nb of bits of the bit allocation table
@@ -20,19 +21,15 @@ function [sframe, remaining_data] = superframe(data, allocation_table)
     %% Superframe parameters %%
     crc_sfsize  = fsize * nb_frames;            % bits
     sfdata_size = fdata_size * nb_frames;       % bits, remove CRC_size bits due to frame 0 !!! -CRC_size
-      
-    %% frame0 %%
-    for i = 1 : fdata_size
-        fdata(i) = data(i);
-        nb_data_treated = nb_data_treated + 1;
-    end 
-    sframe = frame(fdata);
     
-    %% frame 1 -> 67 %%
-    for frame_nb = 2 : 68
+    %% CRC encoding %%
+    cdata = crcenc(data(1 : sfdata_size - CRC_size));
+    
+    %% frame 1 -> 68 %%
+    for frame_nb = 1 : 68
         fdata = [];
         for i = 1 : fdata_size
-            fdata(i) = data((frame_nb-1)*fdata_size + i);
+            fdata(i) = cdata((frame_nb-1)*fdata_size + i);
             nb_data_treated = nb_data_treated + 1;
         end
         sframe = [sframe frame(fdata)];
@@ -40,7 +37,7 @@ function [sframe, remaining_data] = superframe(data, allocation_table)
     
     %% remaining data %%
     if nb_data_treated < data_size
-        remaining_data = data(nb_data_treated+1 : data_size);
+        remaining_data = data(nb_data_treated+1 - CRC_size : data_size);
     end
 end
 

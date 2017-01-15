@@ -1,4 +1,4 @@
-function [desframe, remaining_cdata] = desuperframe(csframes, allocation_table)
+function [desframe, err, remaining_cdata] = desuperframe(csframes, allocation_table)
     % Find the data of a superframe
     % - desframes   : data from coded superframe
     % - remaining_data      : [] if all data are decoded; otherwise vector of data which are not in the superframe (superframes length > 1 superframe)
@@ -11,6 +11,7 @@ function [desframe, remaining_cdata] = desuperframe(csframes, allocation_table)
     FEC_size    = 32;           % � changer en passant � une variable globale de la forme 2 * m * (n - k)
     nb_frames   = 68;           % number of frames in a superframe
     remaining_cdata = [];
+    cdesframe = [];             %still CRC encodage
     desframe = [];
     nb_data_treated = 0;
 
@@ -24,8 +25,12 @@ function [desframe, remaining_cdata] = desuperframe(csframes, allocation_table)
             cframe(j) = csframes((frame_nb-1) * f_size + j);
             nb_data_treated = nb_data_treated + 1;
         end
-        desframe = [desframe deframe(cframe)];
+        cdesframe = [cdesframe deframe(cframe)];
     end
+    
+    %% CRC decoding %%
+    cdesframe = double(cdesframe);
+    [desframe err] = crcdec(cdesframe);
 
      %% remaining data %%
     if nb_data_treated < csframe_size
