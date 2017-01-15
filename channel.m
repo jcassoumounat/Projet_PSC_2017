@@ -1,4 +1,4 @@
-function  [output_signal, rep_imp] = channel( input_signal )
+function  [output_signal, rep_imp, rep_freq] = channel( input_signal )
 %This function represents a model of the ADSL channel. 
 %for a basic ADSL line, ie: 256 channels
     %INPUT: The frame that needs to be transmitted through the channel
@@ -52,23 +52,21 @@ function  [output_signal, rep_imp] = channel( input_signal )
     
 
     %Total frequency response
-    rep_freq_tot = [rep_freq ,0 , rep_freq_sym(2:256)];
+    rep_freq_tot =  [rep_freq, rep_freq_sym];
     figure; plot(tableau_temps*Te, abs(rep_freq_tot));
 
     %Impulsionnal response
-    rep_imp = ifft(rep_freq_tot);
+    rep_imp = ifft(rep_freq_tot, 'symmetric');
 
 %tracé en fonction des canaux
 %plot(tableau_temps, rep_imp);
 
     %Impulsionnal response 
-    figure; plot(tableau_temps*Te, abs(rep_imp));
+    figure; plot(tableau_temps*Te, rep_imp);
     title('impulsionnal response');
 
-
-
     %convolution of the input signal with the impulsionnal response
-    output_signal = filter(abs(rep_imp), 1 , input_signal);
+    output_signal = filter(rep_imp, 1 , input_signal);
     %output_signal = conv(input_signal,rep_imp,'same')
     rep_imp_moitie = rep_imp(1:256);
     rep_freq_moitie = fft(rep_imp_moitie);
