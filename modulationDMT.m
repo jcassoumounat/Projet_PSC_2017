@@ -16,7 +16,7 @@ data_qam = data_qam(1:255); %on supprime la valeur du 256ème canal
 data_qam = data_qam';
 data_dmt_conj = conj(data_qam);
 data_dmt_conj_flip = flipud(data_dmt_conj);
-data_conj = [data_qam; 0; data_dmt_conj_flip;0];
+data_conj = [0;data_qam; 0; data_dmt_conj_flip];
 data_conj = data_conj';
 
 data_dmt = ifft(data_conj);
