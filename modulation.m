@@ -1,4 +1,4 @@
-function [dataIn, data_concat, symboles_out] = modulation(bit_In, bit_alloc)
+function [dataIn, data_concat, symbole] = modulation(bit_In, bit_alloc)
 
 %% Parameters %%
 % - Inputs :
