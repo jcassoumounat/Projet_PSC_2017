@@ -1,6 +1,8 @@
+N_bruit = 0.001;
+
 %% Channel estimation %%
 display('Estimation du canal et allocation');
-[estimated_channel_tot, estimated_channel, estimated_noise] = estimation_test(0.001);
+[estimated_channel_tot, estimated_channel, estimated_noise] = estimation_test(N_bruit);
 script_allocation;
 
 
@@ -44,7 +46,7 @@ while ~isequal(remaining_data, [])
 
         [channel_frame, rep_imp, rep_freq_tot] = channel(dmt_frame);
         % with noise AWGN
-        noise_frame = SignalAWGN(channel_frame, 0.0001);
+        noise_frame = SignalAWGN(channel_frame, N_bruit);
         
         %% Plot
         
