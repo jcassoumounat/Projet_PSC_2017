@@ -1,4 +1,4 @@
-function  [output_signal, rep_imp, rep_freq] = channel( input_signal )
+function  [output_signal, rep_imp, rep_freq_tot] = channel( input_signal )
 %This function represents a model of the ADSL channel. 
 %for a basic ADSL line, ie: 256 channels
     %INPUT: The frame that needs to be transmitted through the channel

@@ -1,4 +1,4 @@
-function [dataOutMat, demodulate_signal] = demodulation(before_canal, bit_alloc)
+function [dataOutMat, demodulate_signal] = demodulation_signal(before_canal, bit_alloc, rep_freq)
 
 %% Parameters %%
 % - Inputs :
@@ -13,15 +13,15 @@ function [dataOutMat, demodulate_signal] = demodulation(before_canal, bit_alloc)
 nb_channels = 256;
 after_canal = cell(1,256); 
 dataOut = cell(1,256);
-after_remove_prefix = zeros(256,1);
-length_prefixe = 32;
+% after_remove_prefix = zeros(256,1);
+% length_prefixe = 32;
 indice = 1;
 
-%% Remove the prefix %%
-after_remove_prefix(1:length(before_canal)-length_prefixe) = before_canal(1+length_prefixe:length(before_canal));
+% %% Remove the prefix %%
+% after_remove_prefix(1:length(before_canal)-length_prefixe) = before_canal(1+length_prefixe:length(before_canal));
 
 %% Demodulation %%
-demodulate_signal = demodulationDMT(after_remove_prefix); 
+demodulate_signal = egalisation(rep_freq, before_canal);
 
 for p = 1:nb_channels
     after_canal{p} = demodulate_signal(p);

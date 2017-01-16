@@ -21,7 +21,7 @@
 
 function [X_egal] = egalisation(H, x)
 %     X           = fft(x(L_cyclic + 1 : L_x)); 
-    X = fft(x);
+    X = fft(x(33:544));
     X_egal      = X ./ H;
 end
 

@@ -70,7 +70,8 @@ function [ estimated_channel, estimated_response, estimated_noise ] = estimation
         [~, demodulation_dmt_frame] = demodulation(noise_frame, allocation_qam);
         
         
-        for channel_number = 1 : tot_channelpartial_estimated_noise(channel_number,frame_number)
+        for channel_number = 1 : tot_channel
+            partial_estimated_noise(channel_number,frame_number);
             real_demod = real(demodulation_dmt_frame(channel_number));
             imag_demod = imag(demodulation_dmt_frame(channel_number));
             real_qam = real(qam_frame(channel_number));
