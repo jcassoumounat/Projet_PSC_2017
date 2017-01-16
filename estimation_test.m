@@ -18,78 +18,56 @@ function [ estimated_channel, estimated_noise ] = estimation_test()
     qam_frame = zeros(1,tot_channel);
     dmt_frame = zeros(1,tot_channel * 2 + length_prefixe);
     channel_frame = zeros (1,tot_channel *2 + length_prefixe); 
-    without_prefixe = zeros(1,256*2);
-    length_data = 256*2; 
+    without_prefixe = zeros(1,tot_channel*2);
+    length_data = 2*tot_channel; 
     
-    Te = 1/1104000;                  %sample time
-    tableau_temps = [1:1:544];       %Size of the number of discret samples
-    tableau_temps2 = [0:1:255]
+    Te = 1/1104000;                                                 %sample time
+    tableau_temps = [1:1:tot_channel*2 + length_prefixe];           %size of the number of discret samples
+    tableau_temps2 = [1:1:tot_channel];
     
+    noise_coef = 0.1;
     
 %% Creating the initialisation frame
-    init_frame = zeros(1,512);
-    init_frame(1) = 1;
-%     init_frame = zeros(1,512);
-%     for i= 1 : 9
-%         init_frame(i) = 1;
-%     end
-%     for i= 10 : 512
-%         init_frame(i) = init_frame(i-4) + init_frame(i-9);
-%         if (init_frame(i) >= 2)
-%             init_frame(i) = 0;
-%         end
-%     end
+%     init_frame = zeros(1,2*tot_channel);
+%     init_frame(1) = 1;
+    init_frame = zeros(1,2*tot_channel);
+    for i= 1 : 9
+        init_frame(i) = 1;
+    end
+    for i= 10 : 2*tot_channel
+        init_frame(i) = init_frame(i-4) + init_frame(i-9);
+        if (init_frame(i) >= 2)
+            init_frame(i) = 0;
+        end
+    end
     
 %% %processing frame in qam and dmt
-    [bobi , dmt_frame, qam_frame] = modulation(init_frame, allocation_qam);
+    [~ , dmt_frame, qam_frame] = modulation(init_frame, allocation_qam);
 
 %% processing the frame through the channel
     [channel_frame, rep_imp] = channel(dmt_frame);
-    figure; plot(tableau_temps*Te, channel_frame);
-    title('signal after the channel');
-    
-
-%% CrossTalk
-    %noise_frame = SignalCrossTalk(channel_frame);
-    %figure; plot(diaphonie);
-    title('signal with noise');
-%% SignalDamaged
-    %noise_frame = (channel_frame);
-    %figure; plot(degat);
-    
-    
-    
-%% convololution with H-1(t)
-%     with_prefixe = filter_reception(rep_imp, noise_frame);
-%     
-    
-%    AWGN
-%     noise_frame = SignalAWGN(channel_frame, 0.0001);
-%     figure; plot(tableau_temps*Te,noise_frame);
-%     
-    %% Remove the prefix cyclic %%   
-
+%   figure; plot(tableau_temps*Te, channel_frame);
+%   title('signal after the channel');
     
 
 
-
-%% processing the frame through the dmt demodulator
-%     for m = 1 : tot_channel
-%        demodulation_dmt_frame = demodulationDMT(without_prefixe);
-%     end
         
  %% estimation of the coefficients of the channel's impulsionnal response
  
      for frame_number = 1 : tot_frames
     %% AWGN
-        noise_frame = zeros(1, 544);
-        noise_frame = SignalAWGN(channel_frame, 0.001);
-        %figure; plot(tableau_temps*Te,noise_frame);
-        %title('signal with noise');
+        noise_frame = zeros(1, tot_channel*2 + length_prefixe);
+        noise_frame = SignalAWGN(channel_frame, noise_coef);
+    %% CrossTalk
+    %noise_frame = SignalCrossTalk(channel_frame);
+  
+    %% SignalDamaged
+    %noise_frame = (channel_frame);
+        
         
     %% Demodulation
 
-        [demodulation_qam_frame, demodulation_dmt_frame] = demodulation(channel_frame, allocation_qam);
+        [~, demodulation_dmt_frame] = demodulation(noise_frame, allocation_qam);
         
         
         for channel_number = 1 : tot_channel
@@ -108,12 +86,16 @@ function [ estimated_channel, estimated_noise ] = estimation_test()
  %% estimation of the coefficients of the channel's impulsionnal response
     for frame_number = 1 : tot_frames
 %% AWGN
-        noise_frame = zeros(1, 544);
-        noise_frame = SignalAWGN(channel_frame, 0.0001);
-        %figure; plot(tableau_temps*Te,noise_frame);
-        
-        
+        noise_frame = zeros(1, tot_channel*2 + length_prefixe);
+        noise_frame = SignalAWGN(channel_frame, noise_coef);
+     %% Demodulation
+        [~, demodulation_dmt_frame] = demodulation(noise_frame, allocation_qam);
+                
         for channel_number = 1 : tot_channel
+            real_demod = real(demodulation_dmt_frame(channel_number));
+            imag_demod = imag(demodulation_dmt_frame(channel_number));
+            real_qam = real(qam_frame(channel_number));
+            imag_qam = imag(qam_frame(channel_number));
             partial_estimated_noise(channel_number,frame_number) = partial_estimated_noise(channel_number, frame_number) + (demodulation_dmt_frame(channel_number) - estimated_response(channel_number).*qam_frame(channel_number)) ./tot_frames; 
         end
     end
@@ -124,10 +106,10 @@ function [ estimated_channel, estimated_noise ] = estimation_test()
     end
     
     
-    estimated_response
-    figure; plot(tableau_temps2*Te, estimated_response);
-    estimated_noise
-    figure; plot(tableau_temps2*Te, estimated_noise);
+    estimated_response;
+     figure; plot(tableau_temps2*Te, abs(estimated_response));
+    estimated_noise;
+     figure; plot(tableau_temps2*Te, abs(estimated_noise));
     
 end
 
