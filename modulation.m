@@ -39,6 +39,8 @@ for i = 1:nb_channels
     symbole = cell2mat(symboles_out);
 end
 
+sPlotFig = scatterplot(symbole,1,0,'g.');
+
 data_concat = modulationDMT(symbole);
 
 %% Add the prefix cyclic %%
