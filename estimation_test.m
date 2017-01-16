@@ -1,4 +1,4 @@
-function [ estimated_channel, estimated_noise ] = estimation_test(N0)
+function [ estimated_channel, estimated_response, estimated_noise ] = estimation_test(N0)
 %UNTITLED6 Summary of this function goes here
 %   ouput values:
     %estimated_channel: represents the average estimated response of 30 responses of the channel to the initialisation frame
@@ -70,7 +70,7 @@ function [ estimated_channel, estimated_noise ] = estimation_test(N0)
         [~, demodulation_dmt_frame] = demodulation(noise_frame, allocation_qam);
         
         
-        for channel_number = 1 : tot_channel
+        for channel_number = 1 : tot_channelpartial_estimated_noise(channel_number,frame_number)
             real_demod = real(demodulation_dmt_frame(channel_number));
             imag_demod = imag(demodulation_dmt_frame(channel_number));
             real_qam = real(qam_frame(channel_number));
