@@ -47,10 +47,10 @@ close all
     gamma = sqrt(  (R + j*L*2*pi*half_bandwidth).*(G + j*C*2*pi*half_bandwidth)  );
 
     %Frequency response without reflection
-%     rep_freq = 1/2*exp(-gamma*longueur);
+     rep_freq = 1/2*exp(-gamma*longueur);
 
     %Frequency response with reflexion
-     rep_freq = 0.5 * (1 + reflex_sortie) * exp(- gamma * longueur)  ./ (1 - reflex_entree* reflex_sortie * exp(-2 * gamma * longueur));
+%      rep_freq = 0.5 * (1 + reflex_sortie) * exp(- gamma * longueur)  ./ (1 - reflex_entree* reflex_sortie * exp(-2 * gamma * longueur));
     figure; plot(half_bandwidth, abs(rep_freq));
     title('Frequential Response');
    
@@ -80,4 +80,3 @@ close all
         
 
 end
-
