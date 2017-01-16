@@ -1,4 +1,5 @@
 %% Channel estimation %%
+display('Estimation du canal et allocation');
 [estimated_channel_tot, estimated_channel, estimated_noise] = estimation_test(0.001);
 script_allocation;
 
@@ -30,7 +31,10 @@ while ~isequal(remaining_data, [])
     %% For each frame taken appart %%
     for frame_nb = 1 : nb_frames_in_one_superframe
         
+        display('Numéro de frame en cours de traitement = ');
+        display(frame_nb);
         frame_i = superframe_i((frame_nb-1)*Nt + 1 : frame_nb*Nt);
+        
         
 
         %% Modulation %%
@@ -64,20 +68,8 @@ while ~isequal(remaining_data, [])
 %         difference = abs(Y1 - Y2);
 %         plot(difference);
 %         
-        
-        %% Egalization %%
-%            with_prefixe = egalisation(fft(rep_imp), channel_frame);
-        %    with_prefixe = deconvwnr(noise_frame, rep_imp, 0.0001);
-        
-        
-%         %% Plot
-%         figure(3);
-%         clf();
-%         plot(abs(with_prefixe));
-%         title('Signal after equalization');
  
         %% Demodulation + Egalisation %%
-        %[bitsOut, demodulation_dmt_frame] = demodulation_signal(noise_frame, alloc, rep_freq_tot); 
         [bitsOut, demodulation_dmt_frame] = demodulation_signal(noise_frame, alloc, estimated_channel_tot); 
 
 
@@ -101,5 +93,7 @@ perfect_transmission_1____At_least_one_mistake_0 = isequal(input_data, output_da
 %% Rate %%
 rate = (nb_frames_in_one_superframe * Nt)/0.017
 useful_rate = sframe_data_size/0.017
+bit_error = sum(xor(input_data, output_data))
+bit_error_rate = bit_error/useful_rate
 
 
