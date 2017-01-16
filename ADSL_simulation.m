@@ -25,6 +25,7 @@ tableau_temps = (1:1:sum(allocation_qam)/2+length_prefixe); %Size of the number 
 %% Transmission %%
 
 remaining_data = input_data;
+
 while ~isequal(remaining_data, [])
     %% Creation of a superframe %%
     [superframe_i, remaining_data] = superframe(remaining_data, alloc);
@@ -44,7 +45,7 @@ while ~isequal(remaining_data, [])
         with_prefixe = egalisation(rep_freq_tot, channel_frame);
         
         %% Demodulation %%  
-        [bitsOut, demodulation_dmt_frame] = demodulation(with_prefixe, alloc);
+        [bitsOut, demodulation_dmt_frame] = demodulation(dmt_frame, alloc); % replace dmt_frame by with_prefixe
         
         %% Reconstruction of the superframe %%
         encoded_sframe = [ encoded_sframe bitsOut];

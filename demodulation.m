@@ -24,10 +24,10 @@ after_remove_prefix(1:length(before_canal)-length_prefixe) = before_canal(1+leng
 demodulate_signal = demodulationDMT(after_remove_prefix);
 
 %Pour ne pas avoir de réel en sortie de DMT (sinon 0)
-demodulate_signal(1) = 1-1i;
-demodulate_signal(257) = 1-1i;
+% demodulate_signal(1) = 1-1i;
+% demodulate_signal(257) = 1-1i;
 
-sPlotFig = scatterplot(demodulate_signal,1,0,'g.');
+%sPlotFig = scatterplot(demodulate_signal,1,0,'g.');
 
 for p = 1:nb_channels
     after_canal{p} = demodulate_signal(p);

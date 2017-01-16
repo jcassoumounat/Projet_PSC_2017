@@ -10,7 +10,7 @@ function  [output_signal, rep_imp, rep_freq] = channel( input_signal )
 %%
 %Parameters of the line
     % frequency bandwith
-    half_bandwidth = [0:1104000/256:1104000-(1104000/256)]
+    half_bandwidth = [0:1104000/256:1104000-(1104000/256)];
     bandwidth = [0:2208000/512:2208000-(2208000/512)];
     
     %Constants 
