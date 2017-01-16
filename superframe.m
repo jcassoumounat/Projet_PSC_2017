@@ -13,13 +13,14 @@ function [sframe, remaining_data] = superframe(data, allocation_table)
     nb_data_treated = 0;
     data_size = length(data);
     sframe = [];
+    first_channel_bits_nb = log2(allocation_table(1));
     
     %% Frame parameters %%
     fsize       = sum(log2(allocation_table));   % sum of nb of bits of the bit allocation table
-    fdata_size  = fsize - FEC_size;              % frame data size 
+    fdata_size  = fsize - FEC_size - first_channel_bits_nb;              % frame data size 
     
     %% Superframe parameters %%
-    sfdata_size = fdata_size * nb_frames;       % bits, remove CRC_size bits due to frame 0 !!! -CRC_size
+    sfdata_size = fdata_size * nb_frames;       % bits
     
     %% CRC encoding %%
     cdata = crcenc(data(1 : sfdata_size - CRC_size));
@@ -31,7 +32,7 @@ function [sframe, remaining_data] = superframe(data, allocation_table)
             fdata(i) = cdata((frame_nb-1)*fdata_size + i);
             nb_data_treated = nb_data_treated + 1;
         end
-        sframe = [sframe frame(fdata)];
+        sframe = [sframe 0 0 frame(fdata)];
     end
     
     %% remaining data %%
