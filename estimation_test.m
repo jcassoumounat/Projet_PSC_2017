@@ -25,7 +25,7 @@ function [ estimated_channel, estimated_noise ] = estimation_test()
     tableau_temps = [1:1:tot_channel*2 + length_prefixe];           %size of the number of discret samples
     tableau_temps2 = [1:1:tot_channel];
     
-    noise_coef = 0.00001;
+    noise_coef = 0.0001;
     
 %% Creating the initialisation frame
 %     init_frame = zeros(1,2*tot_channel);
@@ -103,11 +103,11 @@ function [ estimated_channel, estimated_noise ] = estimation_test()
     
     
     estimated_response;
-     %figure; plot(tableau_temps2*Te, abs(estimated_response));
-     %title('estimated canal');
+     figure; plot(tableau_temps2*Te, abs(estimated_response));
+     title('estimated canal');
     estimated_noise;
      figure; plot(tableau_temps2*Te, abs(estimated_noise));
-     %title('estimated noise');
+     title('estimated noise');
     
 end
 
