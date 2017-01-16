@@ -23,12 +23,12 @@ function [] = main()
 %     frame = random_digital_signal(sum(log2(allocation_qam)), 0.001);
     
     %% Processing frame in qam and dmt
-    [bitsIn, dmt_frame, ~] = modulation(frame, allocation_qam);
+    [~, dmt_frame, ~] = modulation(frame, allocation_qam);
     
-    
-    dmt_frame = zeros(1, 544);
-    dmt_frame(50) = 1;
-    
+    figure(3);
+    clf();
+    plot(abs(dmt_frame));
+    title('Signal before equalization');
     
     %% Processing the frame through the channel
     [channel_frame, rep_imp] = channel(dmt_frame);
@@ -68,20 +68,18 @@ function [] = main()
 %% Equalization
     
 %     egal_frame = egalisation(fft(rep_imp), channel_frame);
-    egal_frame = egalisation(fft(rep_imp), noise_frame);
-%     egal_frame = deconvwnr(noise_frame, rep_imp, 0.01);
+%    egal_frame = egalisation(fft(rep_imp), noise_frame);
+    egal_frame = deconvwnr(noise_frame, rep_imp, 0.0001);
      
-    figure(3);
+    figure(4);
     clf();
     plot(abs(egal_frame));
     title('Signal after equalization');
 
 %% Demodulation
-   [bitsOut, demodulation_dmt_frame] = demodulation(dmt_frame, allocation_qam);
+   [bitsOut, demodulation_dmt_frame] = demodulation(egal_frame, allocation_qam);
    
-%    size(cellTobitsIn)
-%    size(bitsOut)
-%    diff = abs(bitsIn - bitsOut);
+   frame-bitsOut
    
 
 end
