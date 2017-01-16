@@ -1,4 +1,4 @@
-function [ estimated_channel, estimated_noise ] = estimation_test()
+function [ estimated_response, estimated_noise ] = estimation_test(N0)
 %UNTITLED6 Summary of this function goes here
 %   ouput values:
     %estimated_channel: represents the average estimated response of 30 responses of the channel to the initialisation frame
@@ -25,7 +25,7 @@ function [ estimated_channel, estimated_noise ] = estimation_test()
     tableau_temps = [1:1:tot_channel*2 + length_prefixe];           %size of the number of discret samples
     tableau_temps2 = [1:1:tot_channel];
     
-    noise_coef = 0.0001;
+    noise_coef = N0;
     
 %% Creating the initialisation frame
 %     init_frame = zeros(1,2*tot_channel);
@@ -110,4 +110,3 @@ function [ estimated_channel, estimated_noise ] = estimation_test()
      title('estimated noise');
     
 end
-
