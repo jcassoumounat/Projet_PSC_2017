@@ -26,7 +26,6 @@ demodulate_signal = demodulationDMT(after_remove_prefix);
 for p = 1:nb_channels
     after_canal{p} = demodulate_signal(p);
 end
-
 for i = 1:nb_channels
     dataOut{i} = demodulationQAM(after_canal{i},bit_alloc,i);
 end
