@@ -103,10 +103,11 @@ function [ estimated_channel, estimated_noise ] = estimation_test()
     
     
     estimated_response;
-     figure; plot(tableau_temps2*Te, abs(estimated_response));
-     title('estimated canal');
+     %figure; plot(tableau_temps2*Te, abs(estimated_response));
+     %title('estimated canal');
     estimated_noise;
      figure; plot(tableau_temps2*Te, abs(estimated_noise));
+     %title('estimated noise');
     
 end
 
