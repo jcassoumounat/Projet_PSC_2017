@@ -42,7 +42,7 @@ while ~isequal(remaining_data, [])
         %% Modulation %%
         [~, dmt_frame, qam_frame] = modulation(frame_i, alloc);
         
-        %% Send through channel %%alloscript_allocation; %here is Lelio's test, replace by : Felix's estimation then Lelio's water filling
+        %% Send through channel
 
         [channel_frame, rep_imp, rep_freq_tot] = channel(dmt_frame);
         % with noise AWGN
