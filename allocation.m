@@ -59,9 +59,12 @@ function alloc=allocation(ber, gains, bruits, ptot)
 		end
     end
     
+    %%
+    alloc(1) = 4;
+    %%
     total_bits = sum(log2(alloc));
     i = 1;
-    while(mod(total_bits, 2*16) ~= 0)
+    while(mod(total_bits, 2*8) ~= 2)
         if (log2(alloc(i)) ~= 2)
             alloc(i) = 2^(log2(alloc(i)) - 1);
         end

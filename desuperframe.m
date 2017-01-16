@@ -14,6 +14,7 @@ function [desframe, err, remaining_cdata] = desuperframe(csframes, allocation_ta
     cdesframe = [];             %still CRC encodage
     desframe = [];
     nb_data_treated = 0;
+    first_channel_bits_nb = log2(allocation_table(1));
 
     %% Frame parameters %%
     f_size = sum(log2(allocation_table));   % sum of nb of bits of the bit allocation table
@@ -25,6 +26,7 @@ function [desframe, err, remaining_cdata] = desuperframe(csframes, allocation_ta
             cframe(j) = csframes((frame_nb-1) * f_size + j);
             nb_data_treated = nb_data_treated + 1;
         end
+        cframe = cframe(first_channel_bits_nb + 1 : f_size);
         cdesframe = [cdesframe deframe(cframe)];
     end
     
