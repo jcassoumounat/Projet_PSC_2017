@@ -24,7 +24,7 @@ function  [output_signal, rep_imp, rep_freq] = channel( input_signal )
     D = 1.5*d            ;           % distance between the two wires
     permi = 2 * permi_vide ;         % permitivity of the line
     conduct = 5.65*10^7     ;        % conductivity of copper (1/resistivity)
-    longueur = 3000;
+    longueur = 2000;
 
     %primary parameters of the line
     L = (perme_vide/pi)*log(2*D/d);                                     %Linear Inductance
@@ -67,8 +67,9 @@ function  [output_signal, rep_imp, rep_freq] = channel( input_signal )
     %title('impulsionnal response');
 
     %convolution of the input signal with the impulsionnal response
-    output_signal = filter(rep_imp, 1 , input_signal);
-    %output_signal = conv(input_signal,rep_imp,'same')
+%     output_signal = filter(rep_imp, 1 , input_signal);
+    output_signal = cconv(rep_imp, input_signal(33:544), length(rep_imp));
+%     output_signal = cconv(rep_imp, input_signal, length(input_signal));
     
     
 

@@ -1,4 +1,4 @@
-function [SignalWithAWGN] = SignalAWGN(InputSignal,s)
+function [SignalWithAWGN] = SignalAWGN(InputSignal, N0)
 %% 
 % Return the input signal with added white gaussian noise.
 % Parameters :
@@ -9,14 +9,10 @@ function [SignalWithAWGN] = SignalAWGN(InputSignal,s)
 % - Outputs :
 %   * SignalWithAWGN : Signal with added white gaussian noise
 
-    %% Encoding parameters %%
-    N=length(InputSignal); %Input Signal vector's length
-    AWGN=s*randn(1,N); %Added White Gaussian Noise
-    SignalWithAWGN=ones(1,N);
+    %% Parameters %%
+    N    = length(InputSignal); %Input Signal vector's length
+    AWGN = N0*randn(1, N);        %Added White Gaussian Noise
     
-    %% Encoding %%
-    %add white noise to the input signal
-    for i=1:N
-        SignalWithAWGN(i)=AWGN(i)+InputSignal(i) ;   
-    end
+    %% Add the noise to the signal %%
+    SignalWithAWGN = AWGN + InputSignal;   
 end

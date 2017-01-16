@@ -1,4 +1,4 @@
-function [dataIn, data_concat, symbole] = modulation(bit_In, bit_alloc)
+function [dataIn, data_with_prefix, symbole] = modulation(bit_In, bit_alloc)
 
 %% Parameters %%
 % - Inputs :
@@ -39,14 +39,14 @@ for i = 1:nb_channels
     symbole = cell2mat(symboles_out);
 end
 
-%sPlotFig = scatterplot(symbole,1,0,'g.');
-
 data_concat = modulationDMT(symbole);
 
 %% Add the prefix cyclic %%
 length_data = length(data_concat);
-data_concat(1+length_prefixe:length_data+length_prefixe) = data_concat(1:length_data); 
-data_concat(1:length_prefixe) = data_concat(1+length_data:length_data+length_prefixe);
+% data_concat(1+length_prefixe : length_data+length_prefixe) = data_concat(1:length_data); 
+% data_concat(1:length_prefixe) = data_concat(1+length_data:length_data+length_prefixe);
+% data_concat(1:length_prefixe) = data_concat(length_data - length_prefix + 1 : length_data);
+data_with_prefix = [data_concat(length_data - length_prefixe + 1 : length_data), data_concat];
 
 end
 
