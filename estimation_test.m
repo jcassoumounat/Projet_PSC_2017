@@ -1,4 +1,4 @@
-function [ estimated_response, estimated_noise ] = estimation_test(N0)
+function [ estimated_channel, estimated_noise ] = estimation_test(N0)
 %UNTITLED6 Summary of this function goes here
 %   ouput values:
     %estimated_channel: represents the average estimated response of 30 responses of the channel to the initialisation frame
@@ -22,7 +22,7 @@ function [ estimated_response, estimated_noise ] = estimation_test(N0)
     length_data = 2*tot_channel; 
     
     Te = 1/1104000;                                                 %sample time
-    tableau_temps = [1:1:tot_channel*2 + length_prefixe];           %size of the number of discret samples
+    tableau_temps = [1:1:tot_channel*2 ];           %size of the number of discret samples
     tableau_temps2 = [1:1:tot_channel];
     
     noise_coef = N0;
@@ -52,7 +52,7 @@ function [ estimated_response, estimated_noise ] = estimation_test(N0)
 
 
         
- %% estimation of the coefficients of the channel's impulsionnal response
+ %% estimation of the coefficients of the channeresponsel's impulsionnal response
  
      for frame_number = 1 : tot_frames
     %% AWGN
@@ -101,9 +101,12 @@ function [ estimated_response, estimated_noise ] = estimation_test(N0)
         end
     end
     
+    estimated_sym = fliplr(conj(estimated_response));
     
-    estimated_response;
-     figure; plot(tableau_temps2*Te, abs(estimated_response));
+
+    %Total frequency response
+    estimated_channel =  [0, estimated_response(2:256),0, estimated_sym(1:255)];
+     figure; plot(tableau_temps*Te, abs(estimated_channel));
      title('estimated canal');
     estimated_noise;
      figure; plot(tableau_temps2*Te, abs(estimated_noise));
