@@ -58,12 +58,16 @@ close all
     
 
     %Total frequency response
-    rep_freq_tot =  [rep_freq, rep_freq_sym];
+    rep_freq_tot =  [0, rep_freq(2:256),0, rep_freq_sym(1:255)];
     figure; plot(bandwidth, abs(rep_freq_tot));
     title('Total Frequency Response');
 
     %Impulsionnal response
-    rep_imp = ifft(rep_freq_tot, 'symmetric');
+    rep_imp = ifft(rep_freq_tot);
+    
+    %% adding noise
+%     rep_imp = SignalCrossTalk(rep_imp);
+%     figure ; plot(abs(fft(rep_imp)));
 
     %Impulsionnal response 
     figure; plot(tableau_temps*Te, rep_imp);
