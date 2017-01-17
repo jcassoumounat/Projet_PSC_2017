@@ -12,18 +12,18 @@ function [SignalWithCrossTalk] = SignalCrossTalk(InputSignal)
     N=length(InputSignal);      %Signal Length(255)
     Fmax=2208000;               %Maximum Frequency
     Fpas=4312.5;                %Frequency step
-    f=[Fpas:Fpas:Fmax];    %Frequency tab
+    f=[Fpas:Fpas:Fmax];         %Frequency tab
     f0=270000;                  %Specific Frequency used fot this formula
     
     %% Encoding %%
     %Calculate the K[i] coefficients
-    for i=1:512
+    for i=1:N
         if f(i)<28000
             K(i)=0;
         elseif f(i)<=138000
             K(i)=-38;
         else
-            K(i)=-38-24*(f(i)-138000)/43125;
+            K(i)=-38-24*(f(i)-138000)/4312,5;
         end
     end
     
@@ -38,7 +38,7 @@ function [SignalWithCrossTalk] = SignalCrossTalk(InputSignal)
         %Standard Deviation of Channel i
         sigma(i)=sqrt(PChannelW(i));
         %White Gaussian Noise
-        WhiteNoise=randn(1,N);
+        WhiteNoise=0.1*randn(1,N);
         %CrossTalk calculated proportionnaly to sigma
         CrossTalk(i)= sigma(i)*WhiteNoise(i);
         %add the WGN 
